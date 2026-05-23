@@ -85,16 +85,6 @@ cd Landmark-Detection-using-CNN
 
 Download the [Google Landmarks Dataset](https://github.com/cvdfoundation/google-landmark) and place files as follows:
 
-```
-train.csv
-images/
-  0/
-    0/
-      0/
-        000abc123.jpg
-      ...
-```
-
 Images follow a 3-level directory structure based on the first three characters of the image ID.
 
 ### 3. Install Dependencies
