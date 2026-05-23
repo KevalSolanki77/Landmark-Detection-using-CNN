@@ -1,5 +1,3 @@
-# Landmark Detection using CNN
-
 # 🗺️ Landmark Detection with CNN — Classification + Bounding Box Regression
 
 A multi-task deep learning model that identifies **landmark classes** and predicts **bounding box locations** from grayscale images, built with TensorFlow/Keras on the Google Landmarks dataset.
@@ -217,18 +215,8 @@ Or copy the code into notebook cells. Use a GPU runtime — the Conv2D layers on
 
 ---
 
-## 📄 License
-
-[MIT License](LICENSE)
-
----
-
 ## 🙏 Acknowledgements
 
 - [Google Landmarks Dataset v2](https://github.com/cvdfoundation/google-landmark) — CVDFoundation / Google
 - [TensorFlow / Keras](https://www.tensorflow.org/) — Model framework
 - [OpenCV](https://opencv.org/) — Image preprocessing
-## Installation
-
-
-pip install -r requirements.txt
