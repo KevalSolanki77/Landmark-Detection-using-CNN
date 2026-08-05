@@ -174,16 +174,6 @@ plot_metrics(history, "bounding_box_mse", "Bounding Box MSE")
 
 ---
 
-## ⚠️ Known Issues
-
-**Placeholder bounding box targets**: The training and evaluation loops use `np.random.rand(len(X), 4)` as bounding box ground truth. The model trains on random targets, so bounding box predictions will be meaningless until you replace these with real annotated coordinates.
-
-**Class imbalance**: Filtering to IDs starting with `'00'` and capping at 2,000 rows produces an uneven class distribution. Check `df["landmark_id"].value_counts()` before training.
-
-**OpenCV grayscale on missing files**: The script silently skips images that don't exist on disk. Print skipped paths during the load loop to catch dataset path mismatches early.
-
----
-
 ## 🔧 Extending the Project
 
 - **Real bounding box labels** — Source or annotate actual landmark coordinates and replace the `np.random.rand` targets.
