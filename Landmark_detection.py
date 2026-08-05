@@ -21,27 +21,38 @@ print("Number of classes:", num_classes)
 
 # 2. Data Pipeline
 IMG_SIZE = 75
-
 def preprocess(img_path, label):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
     img = img / 255.0
     return img.reshape(IMG_SIZE, IMG_SIZE, 1), label
 
-images, labels = [], []
+images, labels, bboxes = [], [], []
 for i, row in df.head(2000).iterrows():  
     fname = row["id"] + ".jpg"
     f1, f2, f3 = fname[0], fname[1], fname[2]
     path = os.path.join(base_path, f1, f2, f3, fname)
+    
     if os.path.exists(path):
         img, lbl = preprocess(path, row["landmark_id"])
+        
+        # Extract true normalized box coordinates from your CSV row
+        # (Assuming CSV columns: xmin, ymin, xmax, ymax in pixel values)
+        orig_w, orig_h = row["width"], row["height"] # Original image dimensions
+        box = [
+            row["xmin"] / orig_w,
+            row["ymin"] / orig_h,
+            row["xmax"] / orig_w,
+            row["ymax"] / orig_h
+        ]
+        
         images.append(img)
         labels.append(lbl)
+        bboxes.append(box)
 
 X = np.array(images)
-y = tf.keras.utils.to_categorical(labels, num_classes=num_classes)
-
-print("Data shape:", X.shape, y.shape)
+y_cls = tf.keras.utils.to_categorical(labels, num_classes=num_classes)
+y_box = np.array(bboxes, dtype=np.float32)  # Real targets shape: (N, 4)
 
 # 3. Model Definition
 inputs = tf.keras.layers.Input(shape=(IMG_SIZE, IMG_SIZE, 1))
@@ -68,10 +79,17 @@ model.compile(optimizer='adam',
 model.summary()
 
 # 4. Train
-history = model.fit(X, {"classification": y, "bounding_box": np.random.rand(len(X), 4)}, 
-                    validation_split=0.2,
-                    epochs=5, batch_size=32)
+history = model.fit(
+    X, 
+    {"classification": y_cls, "bounding_box": y_box}, 
+    validation_split=0.2,
+    epochs=5, 
+    batch_size=32
+)
 
+# 5. Evaluate with real target arrays
+losses = model.evaluate(X, {"classification": y_cls, "bounding_box": y_box})
+print("Evaluation Losses & Metrics:", losses)
 # 5. Evaluation
 losses = model.evaluate(X, {"classification": y, "bounding_box": np.random.rand(len(X), 4)})
 print("Evaluation:", losses)
