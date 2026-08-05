@@ -90,9 +90,6 @@ history = model.fit(
 # 5. Evaluate with real target arrays
 losses = model.evaluate(X, {"classification": y_cls, "bounding_box": y_box})
 print("Evaluation Losses & Metrics:", losses)
-# 5. Evaluation
-losses = model.evaluate(X, {"classification": y, "bounding_box": np.random.rand(len(X), 4)})
-print("Evaluation:", losses)
 
 # 6. IoU Metric
 def intersection_over_union(pred_box, true_box):
